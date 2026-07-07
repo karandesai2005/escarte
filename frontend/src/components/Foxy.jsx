@@ -1,77 +1,92 @@
 /**
- * Foxy — a sleek, sophisticated fox mascot for Escarté Learning Labs.
- * Rust-copper body, cream face, navy scholar collar, gold monocle & tassel.
- * Angular, geometric — cool not childish.
- *
- * Props: mood: "neutral" | "happy" | "sad" | "thinking" | "cheer" | "focused"
+ * Foxy — the SkillFox mascot for Escarté Learning Labs.
+ * Humanoid stance • no mouth • expression lives in the eyes & brows.
+ * Colors: burnt orange fur, warm cream, navy paws, amber-gold eyes.
  */
 export default function Foxy({ mood = "neutral", size = 160, className = "" }) {
-  const eyeColor = "#0F1B37";
+  const FUR = "#D4652A";
+  const FUR_DARK = "#A8481A";
+  const CREAM = "#F5F0E8";
+  const NAVY = "#0A1628";
+  const NAVY_MID = "#1B2A4A";
+  const AMBER = "#C9A84C";
+  const PUPIL = "#2D3436";
 
-  const eyes = () => {
+  // Expression variants — eyes + brows only
+  const face = () => {
     if (mood === "sad") {
+      // Concerned: wide soft eyes, inner brow tips raised
       return (
         <>
-          <path d="M 62 78 Q 72 84 82 78" stroke={eyeColor} strokeWidth="3.5" fill="none" strokeLinecap="round" />
-          <path d="M 108 78 Q 118 84 128 78" stroke={eyeColor} strokeWidth="3.5" fill="none" strokeLinecap="round" />
-          <ellipse cx="60" cy="94" rx="3" ry="7" fill="#7BB4E3" opacity="0.85" />
+          <path d="M 70 80 L 84 76" stroke={NAVY} strokeWidth="2.5" strokeLinecap="round" />
+          <path d="M 130 80 L 116 76" stroke={NAVY} strokeWidth="2.5" strokeLinecap="round" />
+          <ellipse cx="78" cy="92" rx="6.5" ry="7.5" fill={CREAM} />
+          <ellipse cx="122" cy="92" rx="6.5" ry="7.5" fill={CREAM} />
+          <ellipse cx="78" cy="93" rx="5" ry="6" fill={AMBER} />
+          <ellipse cx="122" cy="93" rx="5" ry="6" fill={AMBER} />
+          <ellipse cx="78" cy="94" rx="2.2" ry="3" fill={PUPIL} />
+          <ellipse cx="122" cy="94" rx="2.2" ry="3" fill={PUPIL} />
         </>
       );
     }
     if (mood === "happy" || mood === "cheer") {
+      // Joyful crescents — closed happy eyes
       return (
         <>
-          <path d="M 60 80 Q 72 68 84 80" stroke={eyeColor} strokeWidth="4" fill="none" strokeLinecap="round" />
-          <path d="M 106 80 Q 118 68 130 80" stroke={eyeColor} strokeWidth="4" fill="none" strokeLinecap="round" />
+          <path d="M 68 82 Q 78 86 88 82" stroke={NAVY} strokeWidth="2.5" fill="none" strokeLinecap="round" />
+          <path d="M 132 82 Q 122 86 112 82" stroke={NAVY} strokeWidth="2.5" fill="none" strokeLinecap="round" />
+          <path d="M 68 92 Q 78 82 88 92" stroke={PUPIL} strokeWidth="3.5" fill="none" strokeLinecap="round" />
+          <path d="M 132 92 Q 122 82 112 92" stroke={PUPIL} strokeWidth="3.5" fill="none" strokeLinecap="round" />
         </>
       );
     }
     if (mood === "thinking") {
+      // Looking up-right, one brow raised
       return (
         <>
-          {/* Half-closed contemplative eyes */}
-          <path d="M 60 82 L 82 82" stroke={eyeColor} strokeWidth="3.5" strokeLinecap="round" />
-          <ellipse cx="115" cy="82" rx="6" ry="4" fill={eyeColor} />
-          <circle cx="117" cy="80" r="1.5" fill="#F5EFE0" />
+          <path d="M 68 76 L 88 74" stroke={NAVY} strokeWidth="2.5" strokeLinecap="round" />
+          <path d="M 112 76 Q 122 70 132 76" stroke={NAVY} strokeWidth="2.5" fill="none" strokeLinecap="round" />
+          <ellipse cx="78" cy="92" rx="6" ry="7" fill={CREAM} />
+          <ellipse cx="122" cy="92" rx="6" ry="7" fill={CREAM} />
+          <ellipse cx="80" cy="90" rx="4.5" ry="5" fill={AMBER} />
+          <ellipse cx="124" cy="90" rx="4.5" ry="5" fill={AMBER} />
+          <ellipse cx="82" cy="88" rx="2" ry="2.5" fill={PUPIL} />
+          <ellipse cx="126" cy="88" rx="2" ry="2.5" fill={PUPIL} />
         </>
       );
     }
     if (mood === "focused") {
+      // Narrow direct stare, level brows
       return (
         <>
-          <ellipse cx="72" cy="82" rx="5" ry="6" fill={eyeColor} />
-          <ellipse cx="118" cy="82" rx="5" ry="6" fill={eyeColor} />
-          <circle cx="74" cy="80" r="1.6" fill="#F5EFE0" />
-          <circle cx="120" cy="80" r="1.6" fill="#F5EFE0" />
-          {/* Determined brow lines */}
-          <path d="M 58 68 L 82 74" stroke={eyeColor} strokeWidth="3" strokeLinecap="round" />
-          <path d="M 132 68 L 108 74" stroke={eyeColor} strokeWidth="3" strokeLinecap="round" />
+          <path d="M 68 78 L 88 78" stroke={NAVY} strokeWidth="2.8" strokeLinecap="round" />
+          <path d="M 112 78 L 132 78" stroke={NAVY} strokeWidth="2.8" strokeLinecap="round" />
+          <path d="M 68 90 Q 78 96 88 90" fill={AMBER} />
+          <path d="M 132 90 Q 122 96 112 90" fill={AMBER} />
+          <ellipse cx="78" cy="92" rx="2" ry="2.5" fill={PUPIL} />
+          <ellipse cx="122" cy="92" rx="2" ry="2.5" fill={PUPIL} />
         </>
       );
     }
-    // neutral
+    // "Confident" default — one brow raised, half-squint
     return (
       <>
-        <ellipse cx="72" cy="82" rx="5.5" ry="6.5" fill={eyeColor} />
-        <ellipse cx="118" cy="82" rx="5.5" ry="6.5" fill={eyeColor} />
-        <circle cx="74" cy="80" r="1.8" fill="#F5EFE0" />
-        <circle cx="120" cy="80" r="1.8" fill="#F5EFE0" />
+        <path d="M 68 78 Q 78 72 88 78" stroke={NAVY} strokeWidth="2.5" fill="none" strokeLinecap="round" />
+        <path d="M 112 74 L 132 76" stroke={NAVY} strokeWidth="2.8" strokeLinecap="round" />
+        <path d="M 68 90 Q 78 96 88 90 Q 78 84 68 90 Z" fill={CREAM} />
+        <path d="M 112 90 Q 122 96 132 90 Q 122 84 112 90 Z" fill={CREAM} />
+        <ellipse cx="78" cy="90" rx="5" ry="4.5" fill={AMBER} />
+        <ellipse cx="122" cy="90" rx="5" ry="4.5" fill={AMBER} />
+        <ellipse cx="79" cy="91" rx="2" ry="2.5" fill={PUPIL} />
+        <ellipse cx="123" cy="91" rx="2" ry="2.5" fill={PUPIL} />
+        <circle cx="80" cy="89" r="0.8" fill={CREAM} />
+        <circle cx="124" cy="89" r="0.8" fill={CREAM} />
       </>
     );
   };
 
-  const mouth = () => {
-    if (mood === "sad") return <path d="M 82 118 Q 95 108 108 118" stroke={eyeColor} strokeWidth="3" fill="none" strokeLinecap="round" />;
-    if (mood === "cheer" || mood === "happy") return (
-      <>
-        <path d="M 78 110 Q 95 128 112 110 Z" fill={eyeColor} />
-        <path d="M 86 120 Q 95 124 104 120" fill="#B71C1C" />
-      </>
-    );
-    if (mood === "thinking") return <path d="M 86 116 L 100 118" stroke={eyeColor} strokeWidth="3" strokeLinecap="round" />;
-    if (mood === "focused") return <path d="M 86 116 Q 95 118 104 116" stroke={eyeColor} strokeWidth="3" fill="none" strokeLinecap="round" />;
-    return <path d="M 86 115 Q 95 121 104 115" stroke={eyeColor} strokeWidth="3" fill="none" strokeLinecap="round" />;
-  };
+  const showGlasses = mood === "thinking";
+  const showFlames = mood === "cheer";
 
   return (
     <div
@@ -79,77 +94,103 @@ export default function Foxy({ mood = "neutral", size = 160, className = "" }) {
       data-testid={`foxy-${mood}`}
       style={{ width: size, height: size }}
     >
-      <svg viewBox="0 0 200 200" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+      <svg viewBox="0 0 200 260" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
         <defs>
-          <linearGradient id="furGrad" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="#C55A2A" />
-            <stop offset="100%" stopColor="#9C3E1B" />
+          <linearGradient id="furGrad2" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor={FUR} />
+            <stop offset="100%" stopColor={FUR_DARK} />
           </linearGradient>
-          <linearGradient id="collarGrad" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="#1A2A4F" />
-            <stop offset="100%" stopColor="#0F1B37" />
+          <linearGradient id="tailGrad" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stopColor={FUR} />
+            <stop offset="70%" stopColor={FUR} />
+            <stop offset="100%" stopColor={CREAM} />
+          </linearGradient>
+          <linearGradient id="flameGrad" x1="0" y1="1" x2="0" y2="0">
+            <stop offset="0%" stopColor={FUR} />
+            <stop offset="100%" stopColor={AMBER} />
           </linearGradient>
         </defs>
 
-        {/* Neck / scholar collar */}
-        <path d="M 60 165 Q 100 148 140 165 L 130 190 L 70 190 Z" fill="url(#collarGrad)" />
-        <path d="M 92 150 L 100 172 L 108 150 Z" fill="#E5A934" />
+        {/* Abstract flame aura for cheer */}
+        {showFlames && (
+          <g className="animate-flicker" style={{ transformOrigin: "100px 130px" }}>
+            <path d="M 40 130 Q 30 100 50 80 Q 45 105 60 115 Q 55 130 40 130 Z" fill="url(#flameGrad)" opacity="0.85" />
+            <path d="M 160 130 Q 170 100 150 80 Q 155 105 140 115 Q 145 130 160 130 Z" fill="url(#flameGrad)" opacity="0.85" />
+            <path d="M 100 30 Q 88 45 96 60 Q 100 50 104 60 Q 112 45 100 30 Z" fill="url(#flameGrad)" opacity="0.9" />
+          </g>
+        )}
 
-        {/* Ears (angular, sharp) */}
-        <path d="M 40 66 L 56 22 L 74 58 Z" fill="url(#furGrad)" />
-        <path d="M 160 66 L 144 22 L 126 58 Z" fill="url(#furGrad)" />
-        <path d="M 50 58 L 58 32 L 66 56 Z" fill="#F5EFE0" />
-        <path d="M 150 58 L 142 32 L 134 56 Z" fill="#F5EFE0" />
+        {/* Long fluffy tail — curling behind */}
+        <path
+          d="M 158 165 Q 195 145 190 105 Q 180 75 155 85 Q 170 110 165 140 Q 165 155 158 165 Z"
+          fill="url(#tailGrad)"
+          stroke={FUR_DARK}
+          strokeWidth="1.5"
+        />
 
-        {/* Head — geometric diamond-ish shape */}
-        <path d="M 100 40 L 158 92 L 142 150 Q 100 168 58 150 L 42 92 Z" fill="url(#furGrad)" />
-        {/* Face lighter patch */}
-        <path d="M 100 78 L 138 100 L 128 145 Q 100 158 72 145 L 62 100 Z" fill="#F5EFE0" />
+        {/* Legs (navy paws) — slight cocked stance */}
+        <path d="M 84 200 Q 82 230 78 245 L 96 245 L 96 205 Z" fill={FUR} />
+        <path d="M 116 200 Q 118 232 122 245 L 104 245 L 104 205 Z" fill={FUR} />
+        <ellipse cx="87" cy="248" rx="12" ry="5" fill={NAVY} />
+        <ellipse cx="113" cy="248" rx="12" ry="5" fill={NAVY} />
 
-        {/* Cheek accents */}
-        <path d="M 46 100 L 62 108 L 56 130 Z" fill="#9C3E1B" opacity="0.4" />
-        <path d="M 154 100 L 138 108 L 144 130 Z" fill="#9C3E1B" opacity="0.4" />
+        {/* Torso — lean humanoid */}
+        <path d="M 76 145 Q 72 175 82 205 L 118 205 Q 128 175 124 145 Z" fill="url(#furGrad2)" />
+        {/* Cream chest patch */}
+        <path d="M 88 150 Q 84 180 92 200 L 108 200 Q 116 180 112 150 Z" fill={CREAM} />
 
-        {/* Eyes */}
-        {eyes()}
+        {/* Arms — one crossed loosely across chest (confident lean) */}
+        <path d="M 76 148 Q 60 165 68 190 Q 75 185 82 178 Q 82 165 82 155 Z" fill={FUR} />
+        <path d="M 124 148 Q 140 158 145 175 Q 130 178 118 175 Q 118 160 118 152 Z" fill={FUR} />
+        {/* Paw tips */}
+        <ellipse cx="66" cy="188" rx="7" ry="5" fill={NAVY} />
+        <ellipse cx="143" cy="176" rx="7" ry="5" fill={NAVY} />
 
-        {/* Nose (small triangle) */}
-        <path d="M 94 100 L 106 100 L 100 108 Z" fill={eyeColor} />
-        <line x1="100" y1="108" x2="100" y2="115" stroke={eyeColor} strokeWidth="2" />
+        {/* Navy bandana around neck */}
+        <path d="M 78 140 Q 100 148 122 140 L 118 152 Q 100 158 82 152 Z" fill={NAVY_MID} />
+        <path d="M 95 152 L 105 152 L 108 168 L 92 168 Z" fill={NAVY_MID} />
+        {/* Bandana star pattern */}
+        <circle cx="88" cy="146" r="1.5" fill={AMBER} />
+        <circle cx="100" cy="149" r="1.5" fill={AMBER} />
+        <circle cx="112" cy="146" r="1.5" fill={AMBER} />
 
-        {/* Mouth */}
-        {mouth()}
+        {/* Head — triangular tapered */}
+        <path
+          d="M 100 40 L 152 88 Q 148 130 130 138 Q 100 145 70 138 Q 52 130 48 88 Z"
+          fill="url(#furGrad2)"
+        />
 
-        {/* Gold monocle over right eye (for cool/focused/happy vibes) */}
-        {(mood === "focused" || mood === "thinking" || mood === "neutral") && (
+        {/* Ears — one slightly folded */}
+        <path d="M 52 78 L 46 30 L 78 62 Z" fill={FUR} />
+        <path d="M 148 78 L 154 34 Q 145 42 138 55 L 122 62 Z" fill={FUR} />
+        <path d="M 58 68 L 55 42 L 72 60 Z" fill={CREAM} />
+        <path d="M 142 68 L 148 44 Q 143 50 138 58 Z" fill={CREAM} />
+
+        {/* Cream face patch (cheeks / muzzle) */}
+        <path d="M 100 88 L 138 108 L 128 132 Q 100 142 72 132 L 62 108 Z" fill={CREAM} />
+
+        {/* Face — eyes / brows (no mouth) */}
+        {face()}
+
+        {/* Nose — small triangle */}
+        <path d="M 95 108 L 105 108 L 100 116 Z" fill={NAVY} />
+
+        {/* Gold hoop earring on left ear */}
+        <circle cx="56" cy="72" r="3.5" fill="none" stroke={AMBER} strokeWidth="1.8" />
+
+        {/* Optional glasses for thinking */}
+        {showGlasses && (
           <>
-            <circle cx="118" cy="82" r="12" fill="none" stroke="#E5A934" strokeWidth="2.5" />
-            <line x1="130" y1="88" x2="136" y2="98" stroke="#E5A934" strokeWidth="2" />
+            <circle cx="78" cy="92" r="10" fill="none" stroke={AMBER} strokeWidth="1.8" />
+            <circle cx="122" cy="92" r="10" fill="none" stroke={AMBER} strokeWidth="1.8" />
+            <line x1="88" y1="92" x2="112" y2="92" stroke={AMBER} strokeWidth="1.5" />
           </>
         )}
 
-        {/* Blush for happy/cheer */}
-        {(mood === "happy" || mood === "cheer") && (
-          <>
-            <ellipse cx="58" cy="118" rx="8" ry="5" fill="#B71C1C" opacity="0.35" />
-            <ellipse cx="142" cy="118" rx="8" ry="5" fill="#B71C1C" opacity="0.35" />
-          </>
-        )}
-
-        {/* Tear for sad */}
+        {/* Subtle tear for sad */}
         {mood === "sad" && (
-          <ellipse cx="60" cy="108" rx="3" ry="7" fill="#7BB4E3" />
+          <ellipse cx="72" cy="102" rx="2.5" ry="5.5" fill="#7BB4E3" />
         )}
-
-        {/* Graduation cap — sleek navy with gold tassel */}
-        <rect x="58" y="20" width="84" height="8" fill="#1A2A4F" rx="1.5" />
-        <path d="M 50 24 L 100 6 L 150 24 L 100 42 Z" fill="#1A2A4F" />
-        <circle cx="100" cy="24" r="3" fill="#E5A934" />
-        <path d="M 100 24 L 138 34 L 138 52" stroke="#E5A934" strokeWidth="2.2" fill="none" strokeLinecap="round" />
-        <g>
-          <path d="M 134 52 L 142 52 L 140 62 L 136 62 Z" fill="#E5A934" />
-          <path d="M 133 60 L 143 60 L 138 68 Z" fill="#E5A934" />
-        </g>
       </svg>
     </div>
   );
