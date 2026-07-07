@@ -47,14 +47,17 @@ export default function Quiz() {
         question_id: q.id, answer,
       });
       setFeedback(data);
-      if (data.correct) {
+      const honest = !!data.honest;
+      if (honest) {
+        // No right/wrong for character categories — quiet reflection.
+        // No streak, no confetti, no error sound.
+      } else if (data.correct) {
         const newStreak = streak + 1;
         setStreak(newStreak);
         playSound("confetti");
         confetti({ particleCount: 40, spread: 60, origin: { y: 0.7 }, colors: ["#E5A934", "#B71C1C", "#1A2A4F"] });
-        // Fire crackle triggers when a streak of 2+ ignites (or continues)
         if (newStreak >= 2) {
-          setTimeout(() => playSound("fire"), 250);
+          setTimeout(() => playSound("fire", { maxDuration: 1200 }), 250);
         }
       } else {
         setStreak(0);
@@ -127,12 +130,19 @@ export default function Quiz() {
 
   if (!q) return null;
 
-  const foxyMood = feedback ? (feedback.correct ? "cheer" : "sad") : streak >= 2 ? "focused" : "thinking";
+  const isHonest = !!(feedback?.honest) || !!(q?.honest);
+  const foxyMood = feedback
+    ? (feedback.honest ? "thinking" : feedback.correct ? "cheer" : "sad")
+    : (isHonest ? "focused" : streak >= 2 ? "focused" : "thinking");
   const foxyText = feedback
-    ? feedback.correct
-      ? streak >= 3 ? `${streak} in a row — you're on fire! 🔥` : "Nailed it! 🎉"
-      : "Aww, so close!"
-    : streak >= 2 ? `Streak of ${streak}! Keep it going.` : "Take your time — you've got this.";
+    ? feedback.honest
+      ? "Noted. Your honest answer counts."
+      : feedback.correct
+        ? streak >= 3 ? `${streak} in a row — you're on fire! 🔥` : "Nailed it! 🎉"
+        : "Aww, so close!"
+    : isHonest
+      ? "No right or wrong here — just be honest."
+      : streak >= 2 ? `Streak of ${streak}! Keep it going.` : "Take your time — you've got this.";
 
   return (
     <div className="min-h-screen bg-parchment" data-testid="quiz-page">
@@ -163,15 +173,18 @@ export default function Quiz() {
 
         {feedback && (
           <div
-            className={`rounded-3xl p-5 border-2 shadow-[0_6px_0_0_rgba(226,232,240,1)] ${feedback.correct ? "bg-[#EAF3EE] border-[#2D6A4F]" : "bg-[#F5E4E1] border-[#B71C1C]"} animate-float-up`}
+            className={`rounded-3xl p-5 border-2 shadow-[0_6px_0_0_rgba(226,232,240,1)] ${feedback.honest ? "bg-[#FFF8EA] border-[#E5A934]" : feedback.correct ? "bg-[#EAF3EE] border-[#2D6A4F]" : "bg-[#F5E4E1] border-[#B71C1C]"} animate-float-up`}
             data-testid="feedback-panel"
           >
             <div className="flex items-center gap-2 mb-1">
-              <span className="text-2xl">{feedback.correct ? "✅" : "❌"}</span>
-              <div className="font-display text-xl font-bold" style={{ color: feedback.correct ? "#2E7D32" : "#C62828" }}>
-                {feedback.correct ? "Correct!" : "Not quite"}
+              <span className="text-2xl">{feedback.honest ? "✨" : feedback.correct ? "✅" : "❌"}</span>
+              <div
+                className="font-display text-xl font-bold"
+                style={{ color: feedback.honest ? "#B78522" : feedback.correct ? "#2E7D32" : "#C62828" }}
+              >
+                {feedback.honest ? "Noted" : feedback.correct ? "Correct!" : "Not quite"}
               </div>
-              {feedback.correct && feedback.badge && (
+              {!feedback.honest && feedback.correct && feedback.badge && (
                 <span className="ml-auto bg-white border-2 border-[#E5A934] text-[#0F1B37] rounded-full px-3 py-1 text-xs font-bold animate-pop" data-testid="badge-earned">
                   🏆 Badge unlocked!
                 </span>
@@ -179,7 +192,12 @@ export default function Quiz() {
             </div>
             <p className="text-slate-700 text-sm sm:text-base leading-snug">{feedback.explanation}</p>
             <div className="mt-4">
-              <ChunkyButton data-testid="next-question-btn" variant={feedback.correct ? "primary" : "orange"} onClick={next} disabled={submitting}>
+              <ChunkyButton
+                data-testid="next-question-btn"
+                variant={feedback.honest ? "gold" : feedback.correct ? "primary" : "orange"}
+                onClick={next}
+                disabled={submitting}
+              >
                 {submitting ? "Wrapping up..." : idx + 1 < questions.length ? "Continue" : "See my results 🎉"}
               </ChunkyButton>
             </div>

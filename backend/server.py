@@ -19,6 +19,9 @@ from pydantic import BaseModel, Field, EmailStr
 
 from questions_data import QUESTIONS, CATEGORIES, BADGES
 
+# Categories where there's no "right or wrong" — we want honest self-reflection.
+HONEST_CATEGORIES = {"leadership", "critical", "emotional", "finance"}
+
 # ---------- Config ----------
 JWT_ALGORITHM = "HS256"
 mongo_url = os.environ['MONGO_URL']
@@ -183,6 +186,7 @@ def _public_question(q: dict, idx: int) -> dict:
         "question": q.get("question"),
         "points": q.get("points", 10),
         "badge": q.get("badge"),
+        "honest": q["category"] in HONEST_CATEGORIES,
     }
     if q["format"] in ("mcq", "fill_blank", "scenario"):
         pub["options"] = q["options"]
@@ -245,6 +249,17 @@ async def check_answer(data: CheckAnswerInput, user: dict = Depends(get_current_
     q = _get_question_by_id(data.question_id)
     if not q:
         raise HTTPException(status_code=404, detail="Question not found")
+
+    # Honest / self-reflection categories: no right or wrong. Always mark received.
+    if q["category"] in HONEST_CATEGORIES:
+        return {
+            "correct": True,
+            "honest": True,
+            "explanation": "Thanks for sharing — noted. There's no right or wrong here.",
+            "points": q.get("points", 10),
+            "badge": q.get("badge"),
+        }
+
     correct = False
     fmt = q["format"]
     ans = data.answer
@@ -268,6 +283,7 @@ async def check_answer(data: CheckAnswerInput, user: dict = Depends(get_current_
 
     return {
         "correct": correct,
+        "honest": False,
         "explanation": q.get("explanation", ""),
         "points": q.get("points", 10) if correct else 0,
         "badge": q.get("badge") if correct else None,
@@ -316,6 +332,13 @@ CATEGORY_ADVICE = {
     },
 }
 
+REFLECTION_TEXT = {
+    "finance":    "Your money instincts came through honestly. Keep exploring the 'why' behind smart spending — awareness is the first step to wealth.",
+    "leadership": "Your leadership style is your own. Notice which choices you gravitated toward — that's the leader you're becoming.",
+    "critical":   "You brought your genuine thinking. Trust that instinct, and keep asking 'why?' — that's how sharp minds are built.",
+    "emotional":  "Thanks for being honest about your feelings. Self-awareness like this is the real superpower — it can't be tested, only lived.",
+}
+
 
 @api_router.post("/submissions")
 async def create_submission(data: SubmissionInput, user: dict = Depends(get_current_user)):
@@ -349,9 +372,15 @@ async def create_submission(data: SubmissionInput, user: dict = Depends(get_curr
     score_pct = round((total_points / max_points) * 100) if max_points else 0
 
     # Build pros/cons
-    pros, cons, recs = [], [], []
+    pros, cons, recs, reflections = [], [], [], []
     for cat_id, stats in per_cat.items():
         cat_pct = round((stats["points"] / stats["max_points"]) * 100) if stats["max_points"] else 0
+        if cat_id in HONEST_CATEGORIES:
+            reflections.append({
+                "category": cat_id,
+                "text": REFLECTION_TEXT.get(cat_id, "Thanks for sharing your honest perspective."),
+            })
+            continue
         advice = CATEGORY_ADVICE.get(cat_id, {})
         if cat_pct >= 70:
             pros.append({"category": cat_id, "text": advice.get("pro", "Great work!"), "score": cat_pct})
@@ -374,6 +403,7 @@ async def create_submission(data: SubmissionInput, user: dict = Depends(get_curr
         "pros": pros,
         "cons": cons,
         "recommendations": recs,
+        "reflections": reflections,
         "created_at": datetime.now(timezone.utc).isoformat(),
     }
     await db.submissions.insert_one(submission)

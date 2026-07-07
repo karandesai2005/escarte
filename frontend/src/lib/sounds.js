@@ -39,13 +39,30 @@ function get(name) {
   return a;
 }
 
-export function playSound(name) {
+export function playSound(name, { maxDuration } = {}) {
   try {
     const a = get(name);
     if (!a) return;
     const clone = a.cloneNode();
     clone.volume = SOUNDS[name].volume;
     clone.play().catch(() => {});
+    if (maxDuration) {
+      setTimeout(() => {
+        try {
+          // Fade out quickly, then pause
+          const start = clone.volume;
+          const t0 = performance.now();
+          const fadeMs = 200;
+          function step(now) {
+            const t = Math.min(1, (now - t0) / fadeMs);
+            clone.volume = Math.max(0, start * (1 - t));
+            if (t < 1) requestAnimationFrame(step);
+            else { try { clone.pause(); } catch { /* ignore */ } }
+          }
+          requestAnimationFrame(step);
+        } catch { /* ignore */ }
+      }, Math.max(50, maxDuration - 200));
+    }
   } catch { /* ignore */ }
 }
 

@@ -123,6 +123,25 @@ export default function Results() {
           </div>
         )}
 
+        {/* Reflections (honest categories) */}
+        {sub.reflections?.length > 0 && (
+          <div className="bg-white rounded-3xl border-2 border-[#E5A934] p-5 mt-4 shadow-[0_6px_0_0_rgba(229,169,52,0.35)]">
+            <h2 className="font-display text-xl font-bold text-[#1A2A4F] mb-3">Your Reflections ✨</h2>
+            <p className="text-xs uppercase tracking-widest text-[#B71C1C] mb-3">No right or wrong — just you.</p>
+            <ul className="space-y-2">
+              {sub.reflections.map((r, i) => (
+                <li key={i} data-testid={`reflection-${r.category}`} className="flex gap-3 items-start bg-[#FFF8EA] rounded-xl p-3">
+                  <span className="text-lg">✨</span>
+                  <div>
+                    <div className="text-xs font-bold uppercase text-[#B78522]">{CATEGORY_LABELS[r.category]}</div>
+                    <div className="text-sm text-slate-700 mt-0.5">{r.text}</div>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+
         {/* Pros */}
         <div className="bg-white rounded-3xl border-2 border-slate-200 p-5 mt-4 shadow-[0_6px_0_0_rgba(226,232,240,1)]">
           <h2 className="font-display text-xl font-bold text-slate-800 mb-3">What you rock at 🌟</h2>
