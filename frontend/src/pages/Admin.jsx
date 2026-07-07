@@ -106,7 +106,7 @@ export default function Admin() {
                     <div className="font-bold text-slate-800">{u.name} {u.role === "admin" && <span className="text-xs text-[#1A2A4F]">(admin)</span>}</div>
                     <div className="text-xs text-slate-500">{u.email} • Age {u.age || "-"} • Grade {u.grade || "-"}</div>
                   </div>
-                  <div className="text-xs text-slate-400">{(u.badges || []).length} badges</div>
+                  <div className="text-xs text-slate-400">{(u.badges || []).length} badges • {u.submission_count || 0} attempts{u.last_login_at && <> • last login {new Date(u.last_login_at).toLocaleDateString()}</>}{u.last_attempt_at && <> • last test {new Date(u.last_attempt_at).toLocaleDateString()}</>}</div>
                 </div>
               ))}
             </div>

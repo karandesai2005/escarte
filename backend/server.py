@@ -144,6 +144,10 @@ async def login(data: LoginInput, response: Response):
         raise HTTPException(status_code=401, detail="Invalid email or password")
     token = create_access_token(user["id"], email)
     set_auth_cookie(response, token)
+    await db.users.update_one(
+        {"id": user["id"]},
+        {"$set": {"last_login_at": datetime.now(timezone.utc).isoformat()}},
+    )
     user.pop("_id", None)
     user.pop("password_hash", None)
     return {"user": user, "token": token}
@@ -431,6 +435,12 @@ async def get_submission(submission_id: str, user: dict = Depends(get_current_us
 @api_router.get("/admin/users")
 async def admin_users(admin: dict = Depends(require_admin)):
     users = await db.users.find({}, {"_id": 0, "password_hash": 0}).to_list(1000)
+    # Attach submission counts + latest attempt per user
+    for u in users:
+        subs = await db.submissions.find({"user_id": u["id"]}, {"_id": 0}).sort("created_at", -1).to_list(200)
+        u["submissions"] = subs
+        u["submission_count"] = len(subs)
+        u["last_attempt_at"] = subs[0]["created_at"] if subs else None
     return users
 
 
