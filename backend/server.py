@@ -112,6 +112,7 @@ class LoginInput(BaseModel):
 class SubmissionInput(BaseModel):
     category: Optional[str] = None  # None = full test
     answers: List[dict]  # [{question_id, correct: bool, points: int, format, badge?}]
+    streak_days: Optional[int] = 0  # consecutive days practiced, for the streak bonus
 
 
 # ---------- Auth Routes ----------
@@ -373,6 +374,11 @@ async def create_submission(data: SubmissionInput, user: dict = Depends(get_curr
         new_set = list(existing.union(earned_badges))
         await db.users.update_one({"id": user["id"]}, {"$set": {"badges": new_set}})
 
+    # Reward consistent practice: +5 points per consecutive day, on top of the
+    # earned score.
+    streak_bonus = max(0, data.streak_days) * 5
+    total_points += streak_bonus
+
     score_pct = round((total_points / max_points) * 100) if max_points else 0
 
     # Build pros/cons
@@ -399,6 +405,7 @@ async def create_submission(data: SubmissionInput, user: dict = Depends(get_curr
         "per_category": per_cat,
         "total_points": total_points,
         "max_points": max_points,
+        "streak_bonus": streak_bonus,
         "score_pct": score_pct,
         "rank": _rank(score_pct),
         "correct_count": correct_count,
